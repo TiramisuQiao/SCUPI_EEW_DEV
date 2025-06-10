@@ -603,7 +603,7 @@ const initChart = () => {
     
     const option = {
       grid: {
-        top: 20,
+        top: 50,
         right: 20,
         bottom: 40,
         left: 80
