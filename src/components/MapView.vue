@@ -1,43 +1,66 @@
 <template>
-  <div class="map-container">
-    <!-- Map Display -->
-    <div class="map-wrapper">
-      <div id="earthquake-map" class="map-display"></div>
-      
+  <div class="flex flex-col h-full bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm p-4 border-b">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+          <i class="fas fa-map-marked-alt mr-2 text-blue-600"></i>
+          地震分布图
+        </h1>
+        <div class="flex items-center space-x-4">
+          <!-- Auto-refresh indicator -->
+          <div class="flex items-center text-sm text-gray-600">
+            <div class="w-2 h-2 rounded-full mr-2" :class="isLoading ? 'bg-yellow-500 animate-pulse' : 'bg-green-500'"></div>
+            <span>{{ isLoading ? '更新中...' : '实时同步' }}</span>
+          </div>
+          <!-- Last update time -->
+          <div class="text-sm text-gray-500">
+            更新: {{ lastUpdateTime }}
+          </div>
+        </div>
+      </div>
+      <!-- Legend below header -->
+      <div class="mt-3 flex flex-wrap items-center space-x-6 text-sm">
+        <div class="flex items-center space-x-2">
+          <div class="w-4 h-4 rounded-full bg-green-400"></div>
+          <span>轻微 (1-3)</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-4 h-4 rounded-full bg-yellow-400"></div>
+          <span>中等 (4-5)</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-4 h-4 rounded-full bg-orange-500"></div>
+          <span>强烈 (6-7)</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-4 h-4 rounded-full bg-red-600"></div>
+          <span>极强 (8+)</span>
+        </div>
+        <div v-if="showShelters" class="flex items-center space-x-2">
+          <i class="fas fa-shield-alt text-blue-600"></i>
+          <span>避难所</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Container -->
+    <div class="map-wrapper relative flex-1">
+      <!-- Map Display -->
+      <div id="earthquake-map" class="map-display w-full h-full"></div>
       <!-- Map Controls -->
       <div class="map-controls">
         <div class="control-group">
-          <button 
-            @click="toggleMapType" 
-            class="control-btn"
-            :title="mapType === 'street' ? '切换到卫星视图' : '切换到街道视图'"
-          >
+          <button @click="toggleMapType" class="control-btn" :title="mapType === 'street' ? '切换到卫星视图' : '切换到街道视图'">
             <i :class="mapType === 'street' ? 'fas fa-satellite' : 'fas fa-map'"></i>
           </button>
-          
-          <button 
-            @click="resetMapView" 
-            class="control-btn"
-            title="重置视图"
-          >
+          <button @click="resetMapView" class="control-btn" title="重置视图">
             <i class="fas fa-home"></i>
           </button>
-          
-          <button 
-            @click="refreshData" 
-            class="control-btn"
-            :disabled="isLoading"
-            title="刷新数据"
-          >
+          <button @click="refreshData" class="control-btn" :disabled="isLoading" title="刷新数据">
             <i class="fas fa-sync-alt" :class="{ 'fa-spin': isLoading }"></i>
           </button>
-
-          <button 
-            @click="toggleShelters" 
-            class="control-btn"
-            :class="{ 'active': showShelters }"
-            title="显示/隐藏避难所"
-          >
+          <button @click="toggleShelters" class="control-btn" :class="{ active: showShelters }" title="显示/隐藏避难所">
             <i class="fas fa-shield-alt"></i>
           </button>
         </div>
@@ -48,25 +71,6 @@
         <div class="loading-spinner">
           <i class="fas fa-spinner fa-spin"></i>
           <span>加载地震数据中...</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Status Bar -->
-    <div class="status-bar">
-      <div class="status-info">
-        <span class="update-time">上次更新: {{ lastUpdateTime }}</span>
-        <span class="data-count">地震事件: {{ earthquakeData.length }}个</span>
-        <span v-if="showShelters" class="shelter-count">避难所: {{ shelterData.length }}个</span>
-      </div>
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-dot earthquake"></div>
-          <span>地震源</span>
-        </div>
-        <div v-if="showShelters" class="legend-item">
-          <div class="legend-dot shelter"></div>
-          <span>避难所</span>
         </div>
       </div>
     </div>
