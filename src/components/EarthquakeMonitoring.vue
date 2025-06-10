@@ -99,22 +99,35 @@
     </div>
 
     <!-- Recent Activity List -->
-    <div class="px-4">
-      <h3 class="text-lg font-semibold mb-4">近期活动</h3>
-      <div class="space-y-4">
-        <div v-for="(event, index) in recentEvents" :key="index"
-          @click="openHistoricalData"
-          class="bg-white rounded-lg shadow p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors">
-          <div>
-            <div class="font-semibold">{{ event.location }}</div>
-            <div class="text-sm text-gray-600">{{ event.time }}</div>
-          </div>
-          <div class="text-lg font-bold" :class="getMagnitudeColor(event.magnitude)">
-            M {{ event.magnitude }}
-          </div>
+<div class="px-4">
+  <h3 class="text-lg font-semibold mb-4">近期活动</h3>
+  <div class="space-y-4">
+    <div
+      v-for="(event, index) in recentEvents"
+      :key="index"
+      @click="openHistoricalData"
+      class="bg-white rounded-lg shadow p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
+    >
+      <!-- 左侧：位置 & 时间 -->
+      <div>
+        <div class="font-semibold">{{ event.location }}</div>
+        <div class="text-sm text-gray-600">{{ event.time }}</div>
+      </div>
+
+      <!-- 右侧：震级 + 点击提示 -->
+      <div
+        class="flex flex-col items-end"
+      >
+        <div class="text-lg font-bold" :class="getMagnitudeColor(event.magnitude)">
+          M {{ event.magnitude }}
+        </div>
+        <div class="text-sm text-blue-500 mt-1 flex items-center">
+          👉 点击查看详情
         </div>
       </div>
     </div>
+  </div>
+</div>
   </main>
 
   <!-- Emergency Phone Popup -->
@@ -194,56 +207,78 @@
       </div>
       
       <!-- Historical Data List -->
-      <div class="flex-1 overflow-y-auto p-4">
-        <div class="space-y-4">
-          <div v-for="(earthquake, index) in filteredHistoricalData" :key="index" 
-               @click="selectEarthquake(earthquake)"
-               class="relative rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-               :class="selectedEarthquake?.id === earthquake.id ? 'ring-2 ring-red-500' : ''">
-            <!-- Background Image -->
-            <div class="relative h-32 bg-gradient-to-br from-gray-400 to-gray-600 flex items-end"
-                 :style="earthquake.image ? `background-image: url(${earthquake.image}); background-size: cover; background-position: center;` : ''">
-              <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-              <div class="relative z-10 p-3 text-white w-full">
-                <div class="flex items-end justify-between">
-                  <div>
-                    <div class="font-bold text-lg">{{ earthquake.location }}</div>
-                    <div class="text-sm opacity-90">{{ earthquake.date }} {{ earthquake.time }}</div>
-                  </div>
-                  <div class="text-right">
-                    <div class="text-2xl font-bold" :class="earthquake.magnitude >= 6 ? 'text-red-400' : earthquake.magnitude >= 4 ? 'text-orange-400' : 'text-yellow-400'">
-                      M {{ earthquake.magnitude }}
-                    </div>
-                  </div>
-                </div>
-              </div>
+ <div class="flex-1 overflow-y-auto p-4">
+  <!-- 空列表时显示 -->
+  <div
+    v-if="filteredHistoricalData.length === 0"
+    class="text-center text-gray-500 py-8"
+  >
+    最近一周没有发生过地震
+  </div>
+
+  <!-- 列表不为空时渲染 -->
+  <div v-else class="space-y-4">
+    <div
+      v-for="earthquake in filteredHistoricalData"
+      :key="earthquake.id"
+      @click="selectEarthquake(earthquake)"
+      class="relative rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+      :class="{ 'ring-2 ring-red-500': selectedEarthquake?.id === earthquake.id }"
+    >
+      <!-- Background Image -->
+      <div
+        class="relative h-32 bg-gradient-to-br from-gray-400 to-gray-600 flex items-end"
+        :style="earthquake.image
+          ? { backgroundImage: `url(${earthquake.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+          : {}"
+      >
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="relative z-10 p-3 text-white w-full">
+          <div class="flex items-end justify-between">
+            <div>
+              <div class="font-bold text-lg">{{ earthquake.location }}</div>
+              <div class="text-sm opacity-90">{{ earthquake.date }} {{ earthquake.time }}</div>
             </div>
-            
-            <!-- Details -->
-            <div class="p-3 bg-white">
-              <div class="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span class="text-gray-600">距离:</span>
-                  <span class="font-medium ml-1">{{ earthquake.distance }}</span>
-                </div>
-                <div>
-                  <span class="text-gray-600">影响程度:</span>
-                  <span class="font-medium ml-1">{{ earthquake.severity }}</span>
-                </div>
-                <div>
-                  <span class="text-gray-600">伤亡情况:</span>
-                  <span class="font-medium ml-1">{{ earthquake.casualties }}</span>
-                </div>
-                <div>
-                  <span class="text-gray-600">损坏程度:</span>
-                  <span class="font-medium ml-1">{{ earthquake.damage }}</span>
-                </div>
+            <div class="text-right">
+              <div
+                class="text-2xl font-bold"
+                :class="{
+                  'text-red-400': earthquake.magnitude >= 6,
+                  'text-orange-400': earthquake.magnitude >= 4 && earthquake.magnitude < 6,
+                  'text-yellow-400': earthquake.magnitude < 4
+                }"
+              >
+                M {{ earthquake.magnitude }}
               </div>
             </div>
           </div>
         </div>
       </div>
-      
+
+      <!-- Details -->
+      <div class="p-3 bg-white">
+        <div class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <span class="text-gray-600">距离:</span>
+            <span class="font-medium ml-1">{{ earthquake.distance }}</span>
+          </div>
+          <div>
+            <span class="text-gray-600">影响程度:</span>
+            <span class="font-medium ml-1">{{ earthquake.severity }}</span>
+          </div>
+          <div>
+            <span class="text-gray-600">伤亡情况:</span>
+            <span class="font-medium ml-1">{{ earthquake.casualties }}</span>
+          </div>
+          <div>
+            <span class="text-gray-600">损坏程度:</span>
+            <span class="font-medium ml-1">{{ earthquake.damage }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
       <!-- Selected Earthquake Details -->
       <div v-if="selectedEarthquake" class="border-t border-gray-200 p-4 bg-gray-50">
         <h4 class="font-bold text-gray-800 mb-2">详细信息</h4>
