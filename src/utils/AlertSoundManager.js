@@ -85,7 +85,7 @@ class AlertSoundManager {
 
     try {
       // Create a 3-second alert sound buffer
-      const sampleRate = this.audioContext.sampleRate;
+      const {sampleRate} = this.audioContext;
       const duration = 3.0; // 3 seconds
       const frameCount = sampleRate * duration;
       
@@ -330,12 +330,11 @@ class AlertSoundManager {
 
   // Static method to create and initialize manager
   static async create() {
-    const manager = new AlertSoundManager();
     
     // Don't auto-initialize to respect browser policies
     // Initialization will happen on first playAlert() call
     
-    return manager;
+    return new AlertSoundManager();
   }
 }
 
