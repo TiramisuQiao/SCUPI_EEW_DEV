@@ -698,34 +698,34 @@ const initChart = () => {
           const riskLevel = dataPoint.value >= 6.0 ? '🔴 极高风险' : dataPoint.value >= 4.0 ? '🟡 中等风险' : '🟢 低风险';
           
           return `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.5; max-width: 240px; padding: 10px;">
-  <div style="color: #ff6b6b; font-weight: bold; font-size: 14px; margin-bottom: 6px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 4px;">
-    🌋 地震信息
-  </div>
-  
-  <div style="background: rgba(255, 255, 255, 0.08); border-radius: 4px; padding: 8px; margin-bottom: 8px;">
-    <div style="margin-bottom: 6px; display: flex;">
-      <span style="color: #ffd93d; font-size: 12px; width: 40px;">位置:</span>
-      <span style="color: #ffffff; font-weight: 500; font-size: 12px; flex: 1;">${dataPoint.location.split('县')[0]}</span>
-    </div>
-    <div style="margin-bottom: 6px; display: flex;">
-      <span style="color: #ffd93d; font-size: 12px; width: 40px;">时间:</span>
-      <span style="color: #ffffff; font-size: 12px; flex: 1;">${dataPoint.time}</span>
-    </div>
-    <div style="margin-bottom: 6px; display: flex;">
-      <span style="color: #ffd93d; font-size: 12px; width: 40px;">震级:</span>
-      <span style="color: ${magnitudeColor}; font-weight: 700; font-size: 13px; flex: 1;">M${dataPoint.value}</span>
-    </div>
-    <div style="display: flex;">
-      <span style="color: #ffd93d; font-size: 12px; width: 40px;">深度:</span>
-      <span style="color: #ffffff; font-size: 12px; flex: 1;">${dataPoint.depth}</span>
-    </div>
-  </div>
-  
-  <div style="background: rgba(${dataPoint.value >= 4.0 ? '255, 71, 87' : '42, 213, 115'}, 0.2); border-radius: 4px; padding: 6px; text-align: center;">
-    <span style="color: ${dataPoint.value >= 4.0 ? '#ff4757' : '#2ed573'}; font-weight: 600; font-size: 13px;">${riskLevel.split(' ')[1]}</span>
-  </div>
-</div>
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.4; max-width: 200px; font-size: 28px; padding: 8px;">
+              <div style="color: #ff6b6b; font-weight: bold; font-size: 11px; margin-bottom: 2px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 1px;">
+                🌋 地震
+              </div>
+              
+              <div style="background: rgba(255, 255, 255, 0.08); border-radius: 2px; padding: 2px; margin-bottom: 2px;">
+                <div style="margin-bottom: 1px;">
+                  <span style="color: #ffd93d; font-size: 9px;">位置:</span>
+                  <span style="color: #ffffff; font-weight: 500; font-size: 9px;">${dataPoint.location.split('县')[0]}</span>
+                </div>
+                <div style="margin-bottom: 1px;">
+                  <span style="color: #ffd93d; font-size: 9px;">时间:</span>
+                  <span style="color: #ffffff; font-size: 9px;">${dataPoint.time}</span>
+                </div>
+                <div style="margin-bottom: 1px;">
+                  <span style="color: #ffd93d; font-size: 9px;">震级:</span>
+                  <span style="color: ${magnitudeColor}; font-weight: 700; font-size: 10px;">M${dataPoint.value}</span>
+                </div>
+                <div style="margin-bottom: 1px;">
+                  <span style="color: #ffd93d; font-size: 9px;">深度:</span>
+                  <span style="color: #ffffff; font-size: 9px;">${dataPoint.depth}</span>
+                </div>
+              </div>
+              
+              <div style="background: rgba(${dataPoint.value >= 4.0 ? '255, 71, 87' : '42, 213, 115'}, 0.2); border-radius: 2px; padding: 1px; text-align: center;">
+                <span style="color: ${dataPoint.value >= 4.0 ? '#ff4757' : '#2ed573'}; font-weight: 600; font-size: 9px;">${riskLevel.split(' ')[1]}</span>
+              </div>
+            </div>
           `;
         },
         axisPointer: {
