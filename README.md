@@ -36,10 +36,15 @@ Surveys from 20 pilot users showed high satisfaction in terms of interface clari
 ## 📁 Project Structure
 
 SCUPI_EEW_DEV/
+
 ├── public/ # Static assets
+
 ├── src/ # Source code (frontend)
+
 ├── index.html # Main entry point
+
 ├── .eslintrc.cjs # Code linting configuration
+
 ├── package.json # Dependencies and scripts
 
 ---
